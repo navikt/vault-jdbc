@@ -1,0 +1,18 @@
+version: "3"
+services:
+  testdb:
+    image: postgres:11
+    ports:
+    - "5432:5432"
+    environment:
+    - POSTGRES_PASSWORD=vaultpassword
+  vault:
+    image: vault:0.11.4
+    ports:
+    - "8200:8200"
+    links:
+    - testdb
+    environment:
+    - "VAULT_DEV_ROOT_TOKEN_ID=123456789"
+    - "VAULT_ADDR=http://localhost:8200"
+    - "VAULT_TOKEN=123456789"
