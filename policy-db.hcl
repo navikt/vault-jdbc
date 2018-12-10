@@ -2,6 +2,6 @@ path "sys/renew/*" {
   capabilities = ["update"]
 }
 
-path "database/creds/testdb-user" {
+path "postgresql/preprod/creds/testdb-user" {
   capabilities = ["read"]
 }

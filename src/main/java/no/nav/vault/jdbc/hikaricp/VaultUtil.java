@@ -26,6 +26,8 @@ public class VaultUtil {
         timer = new Timer("VaultScheduler", true);
     }
 
+    // We should refresh tokens from Vault before they expire, so we add 30 seconds margin.
+    // If the token is valid for less than 60 seconds, we use duration / 2 instead.
     public static long suggestedRefreshInterval(long duration) {
         if (duration < 60000) {
             return duration / 2;

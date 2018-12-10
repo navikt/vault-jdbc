@@ -17,11 +17,13 @@ public final class HikariCPVaultUtil {
     private HikariDataSource ds = null;
     private final HikariConfig hikariConfig;
     private final Vault vault;
+    private final String mountPath;
     private final String role;
 
-    private HikariCPVaultUtil(final HikariConfig config, final Vault vault, final String role) {
+    private HikariCPVaultUtil(final HikariConfig config, final Vault vault, final String mountPath, final String role) {
         this.hikariConfig = config;
         this.vault = vault;
+        this.mountPath = mountPath;
         this.role = role;
     }
 
@@ -29,11 +31,11 @@ public final class HikariCPVaultUtil {
         this.ds = ds;
     }
 
-    public static HikariDataSource createHikariDataSourceWithVaultIntegration(final HikariConfig config, final String role) throws VaultError {
+    public static HikariDataSource createHikariDataSourceWithVaultIntegration(final HikariConfig config, final String mountPath, final String role) throws VaultError {
         final VaultUtil instance = VaultUtil.getInstance();
         final Vault vault = instance.getClient();
 
-        final HikariCPVaultUtil hikariCPVaultUtil = new HikariCPVaultUtil(config, vault, role);
+        final HikariCPVaultUtil hikariCPVaultUtil = new HikariCPVaultUtil(config, vault, mountPath, role);
 
         final class RefreshDbCredentialsTask extends TimerTask {
             @Override
@@ -67,7 +69,7 @@ public final class HikariCPVaultUtil {
     }
 
     private RefreshResult refreshCredentialsAndReturnRefreshInterval() throws VaultException {
-        final String path = "database/creds/" + role;
+        final String path = mountPath + "/creds/" + role;
         logger.info("Renewing database credentials for role \"" + role + "\"");
         final LogicalResponse response = vault.logical().read(path);
         final String username = response.getData().get("username");

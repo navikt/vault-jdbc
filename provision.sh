@@ -15,15 +15,15 @@ psql_root() {
 # That way, access to CREATE in "public" can be revoked later on, without superuser access.
 psql_root -c 'CREATE DATABASE "testdb"'
 
-vault secrets enable database
-vault write database/config/testdb \
+vault secrets enable -path=postgresql/preprod database
+vault write postgresql/preprod/config/testdb \
   allowed_roles="testdb-user" \
   plugin_name=postgresql-database-plugin \
   connection_url="postgresql://{{username}}:{{password}}@$PGSQL_HOST:5432/testdb?sslmode=disable" \
   username="$PGSQL_ROOT_USERNAME" \
   password="$PGPASSWORD"
 
-vault write database/roles/testdb-user \
+vault write postgresql/preprod/roles/testdb-user \
     db_name=testdb \
     creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'" \
     default_ttl="1m" \
