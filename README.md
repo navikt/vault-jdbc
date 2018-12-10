@@ -1,9 +1,7 @@
-# Greie for å integrere Vault og JDBC
+# Hvordan få en applikasjon til å hente credentials fra Vault og koble seg til PostgreSQL
 
-Måter å gjøre det på:
+Kopier/lim inn Java-klassene i dette repoet, inn i appen din.
+(Koden er ikke publisert som at maven-artifakt ennå.)
 
-1) Alltid bare restarte appen
-
-2) Polle rett mot Vault, gitt et vault-token, for å hente passord og oppdatere
-
-3) Polle fra en fil som ligger på disk, som endres en gang i blant
+For å opprette en DataSource, lager du en HikariConfig med konfigurasjon for appen,
+og sender inn i HikariCPVaultUtil, som tar seg av kobling mot Vault.

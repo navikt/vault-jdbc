@@ -26,5 +26,9 @@ vault write database/config/testdb \
 vault write database/roles/testdb-user \
     db_name=testdb \
     creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'" \
-    default_ttl="10s" \
-    max_ttl="10s"
+    default_ttl="1m" \
+    max_ttl="1m"
+
+vault policy write db policy-db.hcl
+
+vault token create -policy=db -ttl=768h -period=15s -field token
