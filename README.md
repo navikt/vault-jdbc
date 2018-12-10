@@ -9,3 +9,12 @@ Se `makeDataSource()` i `HikariCPTest`-klassen.
 
 Denne DataSourcen bruker du videre i appen, for eksempel som en Spring Bean
 (hvis du bruker Spring Framework).
+
+### Hvordan kjøre eksempelkoden (HikariCPTest)
+
+1) `docker-compose up` for å starte Vault og PostgreSQL lokalt
+2) `./provision.sh` for å sette opp konfigurasjon
+3) Kjør main-metoden med miljøvariabler: `VAULT_ADDR=http://localhost:8200` og `VAULT_TOKEN_PATH=vault_token.txt`
+
+(Inni `vault_token.txt` ligger et hardkodet token, på nais/kubernetes vil det faktiske
+tokenet injects inn i en fil på samme måte.)
