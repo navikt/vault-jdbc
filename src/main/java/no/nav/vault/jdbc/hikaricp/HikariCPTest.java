@@ -2,6 +2,7 @@ package no.nav.vault.jdbc.hikaricp;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -32,10 +33,11 @@ public class HikariCPTest {
     private static HikariDataSource makeDataSource() throws VaultError {
         final HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:postgresql://localhost:5432/testdb");
-        config.setMaxLifetime(5000);
-        config.setMaximumPoolSize(1);
+        config.setMinimumIdle(0);
+        config.setMaxLifetime(30001);
+        config.setMaximumPoolSize(2);
         config.setConnectionTimeout(250);
-        config.setIdleTimeout(100);
+        config.setIdleTimeout(10001);
         return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(config, "postgresql/preprod", "testdb-user");
     }
 
@@ -46,7 +48,7 @@ public class HikariCPTest {
                 ResultSet res = conn.createStatement().executeQuery("select 42 as foo");
                 res.next();
                 int intRes = res.getInt("foo");
-                System.out.println("intRes = " + intRes);
+                System.out.println("username = " + conn.getMetaData().getUserName() + ", intRes = " + intRes);
             } finally {
                 conn.close();
             }
