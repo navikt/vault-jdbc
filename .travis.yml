@@ -1,0 +1,7 @@
+language: java
+script: mvn package
+deploy:
+  provider: script
+  script: "./travis/deploy.sh"
+  on:
+    branch: master
