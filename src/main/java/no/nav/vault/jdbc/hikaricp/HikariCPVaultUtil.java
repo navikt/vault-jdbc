@@ -5,7 +5,6 @@ import com.bettercloud.vault.VaultException;
 import com.bettercloud.vault.response.LogicalResponse;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +50,10 @@ public final class HikariCPVaultUtil {
                     } else {
                         logger.error("Could not fetch database credentials for role \"" + role + "\"", e);
                     }
+
+                    // Lets try refreshing again
+                    logger.warn("Waiting 5 secs before trying to get new credentials");
+                    instance.getTimer().schedule(new RefreshDbCredentialsTask(), 5000);
                 }
             }
         }
@@ -60,7 +63,7 @@ public final class HikariCPVaultUtil {
             final RefreshResult refreshResult = hikariCPVaultUtil.refreshCredentialsAndReturnRefreshInterval();
             instance.getTimer().schedule(new RefreshDbCredentialsTask(), VaultUtil.suggestedRefreshInterval(refreshResult.leaseDuration * 1000));
         } catch (VaultException e) {
-            throw new VaultError("Could not fetch database credentials for role \"" + role + "\"", e);
+            throw new VaultError("Could not fetch initial database credentials for role \"" + role + "\"", e);
         }
 
         final HikariDataSource ds = new HikariDataSource(config);
@@ -79,11 +82,12 @@ public final class HikariCPVaultUtil {
 
         hikariConfig.setUsername(username);
         hikariConfig.setPassword(password);
+
         if (ds != null) {
-            ds.getHikariConfigMXBean().setUsername(username);
-            ds.getHikariConfigMXBean().setPassword(password);
             ds.setUsername(username);
             ds.setPassword(password);
+            ds.getHikariConfigMXBean().setUsername(username);
+            ds.getHikariConfigMXBean().setPassword(password);
         }
 
         return new RefreshResult(response.getLeaseId(), response.getLeaseDuration());

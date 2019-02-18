@@ -11,12 +11,16 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class VaultUtil {
     private static final Logger logger = LoggerFactory.getLogger(VaultUtil.class);
+
+    public static final String VAULT_TOKEN_PROPERTY = "VAULT_TOKEN";
+    public static final String VAULT_TOKEN_PATH_PROPERTY = "VAULT_TOKEN_PATH";
 
     private static VaultUtil INSTANCE;
     private Vault vault;
@@ -86,31 +90,36 @@ public class VaultUtil {
                 @Override
                 public void run() {
                     try {
-                        logger.info("Refreshing Vault token (TTL = " + vault.auth().lookupSelf().getTTL() + " seconds)");
+                        logger.info("Refreshing Vault token (old TTL = " + vault.auth().lookupSelf().getTTL() + " seconds)");
                         AuthResponse response = vault.auth().renewSelf();
+                        logger.info("Refreshed Vault token (new TTL = " + vault.auth().lookupSelf().getTTL() + " seconds)");
                         timer.schedule(new RefreshTokenTask(), suggestedRefreshInterval(response.getAuthLeaseDuration() * 1000));
                     } catch (VaultException e) {
                         logger.error("Could not refresh the Vault token", e);
                     }
                 }
             }
+            logger.info("Starting a refresh timer on the vault token (TTL = " + lookupSelf.getTTL() + " seconds");
             timer.schedule(new RefreshTokenTask(), suggestedRefreshInterval(lookupSelf.getTTL() * 1000));
+        }
+        else {
+            logger.warn("Vault token is not renewable");
         }
     }
 
     private static String getVaultToken() {
         try {
             Map<String, String> env = System.getenv();
-            if (env.containsKey("VAULT_TOKEN") && !"".equals(env.get("VAULT_TOKEN"))) {
-                return env.get("VAULT_TOKEN");
-            } else if (env.containsKey("VAULT_TOKEN_PATH")) {
-                byte[] encoded = Files.readAllBytes(Paths.get(env.get("VAULT_TOKEN_PATH")));
+            if (env.containsKey(VAULT_TOKEN_PROPERTY) && !"".equals(env.get(VAULT_TOKEN_PROPERTY))) {
+                return env.get(VAULT_TOKEN_PROPERTY);
+            } else if (env.containsKey(VAULT_TOKEN_PATH_PROPERTY)) {
+                byte[] encoded = Files.readAllBytes(Paths.get(env.get(VAULT_TOKEN_PATH_PROPERTY)));
                 return new String(encoded, "UTF-8").trim();
             } else if (Files.exists(Paths.get("/var/run/secrets/nais.io/vault/vault_token"))) {
                 byte[] encoded = Files.readAllBytes(Paths.get("/var/run/secrets/nais.io/vault/vault_token"));
                 return new String(encoded, "UTF-8").trim();
             } else {
-                throw new RuntimeException("Neither VAULT_TOKEN or VAULT_TOKEN_PATH is set");
+                throw new RuntimeException("Neither " + VAULT_TOKEN_PROPERTY + " or " + VAULT_TOKEN_PATH_PROPERTY + " is set");
             }
         } catch (Exception e) {
             throw new RuntimeException("Could not get a vault token for authentication", e);
