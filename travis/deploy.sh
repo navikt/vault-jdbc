@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -e
+#!/bin/bash -e
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ]; then
     openssl aes-256-cbc -K $encrypted_45bbcaff3fce_key -iv $encrypted_45bbcaff3fce_iv \
       -in travis/codesigning.asc.enc -out travis/codesigning.asc -d
