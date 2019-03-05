@@ -21,6 +21,7 @@ public class VaultUtil {
 
     public static final String VAULT_TOKEN_PROPERTY = "VAULT_TOKEN";
     public static final String VAULT_TOKEN_PATH_PROPERTY = "VAULT_TOKEN_PATH";
+    public static final int MIN_REFRESH_MARGIN  = 30 * 60 * 1000; // 30 min in ms;
 
     private static VaultUtil INSTANCE;
     private Vault vault;
@@ -33,10 +34,10 @@ public class VaultUtil {
     // We should refresh tokens from Vault before they expire, so we add 30 seconds margin.
     // If the token is valid for less than 60 seconds, we use duration / 2 instead.
     public static long suggestedRefreshInterval(long duration) {
-        if (duration < 60000) {
+        if (duration < MIN_REFRESH_MARGIN) {
             return duration / 2;
         } else {
-            return duration - 30000;
+            return duration - MIN_REFRESH_MARGIN;
         }
     }
 
