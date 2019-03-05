@@ -21,6 +21,7 @@ public class VaultUtil {
 
     public static final String VAULT_TOKEN_PROPERTY = "VAULT_TOKEN";
     public static final String VAULT_TOKEN_PATH_PROPERTY = "VAULT_TOKEN_PATH";
+    public static final int MIN_REFRESH_MARGIN  = 10 * 60 * 1000; // 30 min in ms;
 
     private static VaultUtil INSTANCE;
     private Vault vault;
@@ -30,13 +31,13 @@ public class VaultUtil {
         timer = new Timer("VaultScheduler", true);
     }
 
-    // We should refresh tokens from Vault before they expire, so we add 30 seconds margin.
-    // If the token is valid for less than 60 seconds, we use duration / 2 instead.
+    // We should refresh tokens from Vault before they expire, so we refresh it each 30 min.
+    // If the token is valid for less than 10 min, we use duration / 2 instead.
     public static long suggestedRefreshInterval(long duration) {
-        if (duration < 60000) {
+        if (duration < MIN_REFRESH_MARGIN * 2) {
             return duration / 2;
         } else {
-            return duration - 30000;
+            return duration - MIN_REFRESH_MARGIN;
         }
     }
 
@@ -96,6 +97,10 @@ public class VaultUtil {
                         timer.schedule(new RefreshTokenTask(), suggestedRefreshInterval(response.getAuthLeaseDuration() * 1000));
                     } catch (VaultException e) {
                         logger.error("Could not refresh the Vault token", e);
+
+                        // Lets try refreshing again
+                        logger.warn("Waiting 5 secs before trying to refresh the Vault token");
+                        timer.schedule(new RefreshTokenTask(), 5000);
                     }
                 }
             }
