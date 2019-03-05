@@ -97,6 +97,10 @@ public class VaultUtil {
                         timer.schedule(new RefreshTokenTask(), suggestedRefreshInterval(response.getAuthLeaseDuration() * 1000));
                     } catch (VaultException e) {
                         logger.error("Could not refresh the Vault token", e);
+
+                        // Lets try refreshing again
+                        logger.warn("Waiting 5 secs before trying to refresh the Vault token");
+                        timer.schedule(new RefreshTokenTask(), 5000);
                     }
                 }
             }
