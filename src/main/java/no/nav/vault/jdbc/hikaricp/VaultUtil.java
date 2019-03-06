@@ -112,13 +112,16 @@ public class VaultUtil {
         }
     }
 
+    private static String getProperty(String propertyName) {
+        return System.getProperty(propertyName, System.getenv(propertyName));
+    }
+
     private static String getVaultToken() {
         try {
-            Map<String, String> env = System.getenv();
-            if (env.containsKey(VAULT_TOKEN_PROPERTY) && !"".equals(env.get(VAULT_TOKEN_PROPERTY))) {
-                return env.get(VAULT_TOKEN_PROPERTY);
-            } else if (env.containsKey(VAULT_TOKEN_PATH_PROPERTY)) {
-                byte[] encoded = Files.readAllBytes(Paths.get(env.get(VAULT_TOKEN_PATH_PROPERTY)));
+            if (getProperty(VAULT_TOKEN_PROPERTY) != null && !"".equals(getProperty(VAULT_TOKEN_PROPERTY))) {
+                return getProperty(VAULT_TOKEN_PROPERTY);
+            } else if (getProperty(VAULT_TOKEN_PATH_PROPERTY) != null) {
+                byte[] encoded = Files.readAllBytes(Paths.get(getProperty(VAULT_TOKEN_PATH_PROPERTY)));
                 return new String(encoded, "UTF-8").trim();
             } else if (Files.exists(Paths.get("/var/run/secrets/nais.io/vault/vault_token"))) {
                 byte[] encoded = Files.readAllBytes(Paths.get("/var/run/secrets/nais.io/vault/vault_token"));
