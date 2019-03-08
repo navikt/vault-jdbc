@@ -88,6 +88,7 @@ public final class HikariCPVaultUtil {
             ds.setPassword(password);
             ds.getHikariConfigMXBean().setUsername(username);
             ds.getHikariConfigMXBean().setPassword(password);
+            ds.getHikariPoolMXBean().softEvictConnections();
         }
 
         return new RefreshResult(response.getLeaseId(), response.getLeaseDuration());
