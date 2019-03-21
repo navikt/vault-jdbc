@@ -41,6 +41,13 @@ public final class HikariCPVaultUtil {
             @Override
             public void run() {
                 try {
+                    if (hikariCPVaultUtil.ds != null && hikariCPVaultUtil.ds.isClosed()) {
+                        logger.info("Shutting down Timer");
+                        instance.getTimer().cancel();
+                        logger.info("Shutting down task");
+                        this.cancel();
+                        return;
+                    }
                     final RefreshResult refreshResult = hikariCPVaultUtil.refreshCredentialsAndReturnRefreshInterval();
                     instance.getTimer().schedule(new RefreshDbCredentialsTask(), VaultUtil.suggestedRefreshInterval(refreshResult.leaseDuration * 1000));
                 } catch (VaultException e) {
