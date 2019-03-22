@@ -42,9 +42,7 @@ public final class HikariCPVaultUtil {
             public void run() {
                 try {
                     if (hikariCPVaultUtil.ds != null && hikariCPVaultUtil.ds.isClosed()) {
-                        logger.info("Shutting down Timer");
-                        instance.getTimer().cancel();
-                        logger.info("Shutting down task");
+                        logger.info("Datasource is closed. Stopping scheduling of RefreshDbCredentialsTask");
                         this.cancel();
                         return;
                     }
