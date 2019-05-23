@@ -21,3 +21,17 @@ Denne DataSourcen bruker du videre i appen, for eksempel som en Spring Bean
 
 (Inni `vault_token.txt` ligger et hardkodet token, på nais/kubernetes vil det faktiske
 tokenet injects inn i en fil på samme måte.)
+
+## Feilsøking
+
+### Bruk riktig version av HikariCP
+
+Det kreves versjon 3.2.0 eller nyere. Kjør `mvn dependency:tree` (hvis du bruker Maven) for å dobbeltsjekke hvilken
+versjon av HikariCP som brukes.
+
+##### Det funger er i begynnelsen, men kræsjer etter ca. 1 time
+
+Oppsettet er slik at vi bytter/roterer databasebruker og -passord en gang i timen. Hvis denne utskiftingen feiler, vil databasekoblingen slutte å fungere.
+
+Dette kan f.eks. være fordi HikariCP har for gammel versjon, eller at appen ikke klarte å fornye Vault-tokenet sitt, slik at Vault-tokenet er ugyldig - da får den ikke lov til å hente database-credentials fra Vault.
+
