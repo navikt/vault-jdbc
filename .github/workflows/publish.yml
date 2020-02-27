@@ -33,4 +33,4 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           export GPG_TTY=$(tty) && echo -e "$GPG_KEYS" | gpg --fast-import --batch
-          mvn -B -Prelease --settings ./settings.xml deploy
+          mvn -B -Prelease --settings maven-settings.xml deploy
