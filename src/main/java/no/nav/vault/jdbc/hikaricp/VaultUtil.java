@@ -60,7 +60,7 @@ public class VaultUtil {
         VaultConfig vaultConfig = null;
         try {
             vaultConfig = new VaultConfig()
-                    .address(System.getenv().getOrDefault("VAULT_ADDR", "https://vault.adeo.no"))
+                    .address(getPropertyOrDefault("VAULT_ADDR", "https://vault.adeo.no"))
                     .token(getVaultToken())
                     .openTimeout(5)
                     .readTimeout(30)
@@ -107,6 +107,15 @@ public class VaultUtil {
         }
         else {
             logger.warn("Vault token is not renewable");
+        }
+    }
+
+    private static String getPropertyOrDefault(String propertyName, String defaultValue) {
+        String result = getProperty(propertyName);
+        if(result == null) {
+            return defaultValue;
+        } else {
+            return result;
         }
     }
 
