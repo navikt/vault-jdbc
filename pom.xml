@@ -4,7 +4,7 @@
 
     <groupId>no.nav</groupId>
     <artifactId>vault-jdbc</artifactId>
-    <version>1.3.5-SNAPSHOT</version>
+    <version>1.3.5</version>
     <packaging>jar</packaging>
 
     <name>Vault-JDBC</name>
@@ -136,7 +136,7 @@
         <developerConnection>scm:git:git@github.com:navikt/vault-jdbc.git</developerConnection>
         <connection>scm:git:git@github.com:navikt/vault-jdbc.git</connection>
         <url>https://github.com/navikt/vault-jdbc</url>
-        <tag>HEAD</tag>
+        <tag>vault-jdbc-1.3.5</tag>
     </scm>
 
     <dependencies>
