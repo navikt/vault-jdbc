@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/navikt/vault-jdbc.svg?branch=master)](https://travis-ci.com/navikt/vault-jdbc)
-[![Published on Maven](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/no/nav/vault-jdbc/maven-metadata.xml.svg)](http://central.maven.org/maven2/no/nav/vault-jdbc/)
+[![Published on Maven](https://img.shields.io/maven-metadata/v/http/repo1.maven.org/maven2/no/nav/vault-jdbc/maven-metadata.xml.svg)](http://repo1.maven.org/maven2/no/nav/vault-jdbc/)
 
 # Hvordan få en applikasjon til å hente credentials fra Vault og koble seg til PostgreSQL
 
