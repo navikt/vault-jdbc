@@ -1,7 +1,19 @@
+# vault-jdbc
+
 [![Build Status](https://travis-ci.com/navikt/vault-jdbc.svg?branch=master)](https://travis-ci.com/navikt/vault-jdbc)
 [![Published on Maven](https://img.shields.io/maven-metadata/v/https/repo1.maven.org/maven2/no/nav/vault-jdbc/maven-metadata.xml.svg)](https://repo1.maven.org/maven2/no/nav/vault-jdbc/)
 
-# Hvordan få en applikasjon til å hente credentials fra Vault og koble seg til PostgreSQL
+## Bygg og utvikling
+
+Alle utviklere i NAV har 'maintainer' rollen i dette repoet. Vedlikehold av dette repoet gjøres på dugnad.
+
+Release til Maven Central gjøres ved å kjøre:
+
+```shell
+mvn clean release:prepare release:perform
+```
+
+## Hvordan få en applikasjon til å hente credentials fra Vault og koble seg til PostgreSQL
 
 Dra inn vault-jdbc som avhengighet i pom.xml (hvis du bruker Maven), eller build.gradle (hvis du bruker Gradle).
 
