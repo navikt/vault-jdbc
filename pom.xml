@@ -55,7 +55,6 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>true</useReleaseProfile>
                     <releaseProfiles>release</releaseProfiles>
-                    <branchName>modig-frontend_4</branchName>
                     <goals>deploy</goals>
                 </configuration>
             </plugin>

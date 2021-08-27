@@ -1,4 +1,4 @@
-name: Publish snapshot to Maven Central
+name: Build master and publish snapshot to Maven Central
 on:
   push:
     branches:
@@ -33,3 +33,11 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         run: |
           mvn --no-transfer-progress --batch-mode deploy
+
+  release-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Drafter
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
