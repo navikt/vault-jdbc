@@ -7,11 +7,13 @@
 
 Alle utviklere i NAV har 'maintainer' rollen i dette repoet. Vedlikehold av dette repoet gjøres på dugnad.
 
-Release til Maven Central gjøres ved å kjøre:
+Alle commits til master går blir deployet som en snapshot versjon til Maven Central.
 
-```shell
-mvn clean release:prepare release:perform
-```
+Det blir også laget en "draft release" på GitHub, som man kan redigere for å legge til mer informasjon:
+
+<https://github.com/navikt/vault-jdbc/releases>
+
+Release til Maven Central gjøres ved å trykke "Edit" på siste draft og deretter "Publish Release".
 
 ## Hvordan få en applikasjon til å hente credentials fra Vault og koble seg til PostgreSQL
 
