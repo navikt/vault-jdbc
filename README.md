@@ -7,7 +7,7 @@
 
 Alle utviklere i NAV har 'maintainer' rollen i dette repoet. Vedlikehold av dette repoet gjøres på dugnad.
 
-Alle commits til master går blir deployet som en snapshot versjon til Maven Central.
+Alle commits til master blir deployet som en snapshot versjon til Maven Central.
 
 Det blir også laget en "draft release" på GitHub, som man kan redigere for å legge til mer informasjon:
 
