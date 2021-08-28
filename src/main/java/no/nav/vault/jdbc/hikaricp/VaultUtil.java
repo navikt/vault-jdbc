@@ -69,8 +69,8 @@ public class VaultUtil {
         } catch (VaultException e) {
             throw new VaultError("Could not instantiate the Vault REST client", e);
         }
-
-        vault = new Vault(vaultConfig);
+        // I overgangen fra com.bettercloud:vault-java-driver 3.1.0 til 4.0.0 byttet de fra default å bruke versjon 1 til 2. Overstyrer denne til versjon 1.
+        vault = new Vault(vaultConfig,1);
 
         // Verify that the token is ok
         LookupResponse lookupSelf = null;
