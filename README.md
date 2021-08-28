@@ -1,6 +1,6 @@
 # vault-jdbc
 
-[![Build Status](https://travis-ci.com/navikt/vault-jdbc.svg?branch=master)](https://travis-ci.com/navikt/vault-jdbc)
+[![Build Status](https://github.com/navikt/vault-jdbc/actions/workflows/build-master.yml/badge.svg)](https://github.com/navikt/vault-jdbc/actions/workflows/build-master.yml)
 [![Published on Maven](https://img.shields.io/maven-metadata/v/https/repo1.maven.org/maven2/no/nav/vault-jdbc/maven-metadata.xml.svg)](https://repo1.maven.org/maven2/no/nav/vault-jdbc/)
 
 ## Bygg og utvikling
