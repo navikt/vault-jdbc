@@ -32,6 +32,7 @@ jobs:
           GPG_KEYNAME: ${{ secrets.GPG_KEYNAME }}
           GPG_KEYS: ${{ secrets.GPG_KEYS }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
 
         run: |
           export GPG_TTY=$(tty) && echo "$GPG_KEYS" | gpg --fast-import --batch
@@ -45,3 +46,4 @@ jobs:
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add pom.xml
           git commit -m 'prepare next snapshot version'
+          git push
