@@ -40,10 +40,3 @@ jobs:
           mvn -B versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
           echo "-- Build, test and deploy release to Sonatype --"
           mvn -B --settings maven-settings.xml clean deploy -Prelease -Dmaven.wagon.http.pool=false
-          echo "-- Setting next snapshot version --"
-          mvn -B versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add pom.xml
-          git commit -m 'prepare next snapshot version'
-          git push
