@@ -13,30 +13,25 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v6
         with:
           java-version: 11
-
-      - name: Setup build cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: maven
+          server-id: central
+          server-username-env-var: SONATYPE_USER # env variable for username
+          server-password-env-var: SONATYPE_PASSWORD # env variable for token
+          gpg-private-key: ${{ secrets.GPG_KEYS }}
+          gpg-passphrase-env-var: GPG_PASSPHRASE # env variable for passphrase
 
       - name: Publish artifact
         env:
           SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           GPG_KEYNAME: ${{ secrets.GPG_KEYNAME }}
-          GPG_KEYS: ${{ secrets.GPG_KEYS }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         run: |
-          export GPG_TTY=$(tty) && echo "$GPG_KEYS" | gpg --fast-import --batch
           echo "-- Setting new release version --"
-          mvn -B versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
+          mvn -B versions:set -DnewVersion=${{ github.event.release.tag_name }} -DremoveSnapshot=true -DgenerateBackupPoms=false
           echo "-- Build, test and deploy release to Sonatype --"
-          mvn -B --settings maven-settings.xml clean deploy -Prelease -Dmaven.wagon.http.pool=false
+          mvn -B --settings maven-settings.xml clean deploy -Prelease

@@ -10,29 +10,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v6
         with:
           java-version: 11
-          server-id: ossrh
-          server-username: SONATYPE_USER # env variable for username in release:perform
-          server-password: SONATYPE_PASSWORD # env variable for token in release:perform
+          server-id: central
+          server-username-env-var: SONATYPE_USER # env variable for username
+          server-password-env-var: SONATYPE_PASSWORD # env variable for token
+          gpg-private-key: ${{ secrets.GPG_KEYS }}
+          gpg-passphrase-env-var: GPG_PASSPHRASE # env variable for passphrase
       - name: Configure Git user
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      - uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
       - name: Run tests
         run: mvn --batch-mode clean install
       - name: Deploy snapshot to Maven Central
         env:
           SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          GPG_KEYNAME: ${{ secrets.GPG_KEYNAME }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          mvn --no-transfer-progress --batch-mode deploy
+          mvn --no-transfer-progress --batch-mode --settings maven-settings.xml deploy -Prelease
 
   release-notes:
     runs-on: ubuntu-latest
