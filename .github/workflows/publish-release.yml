@@ -27,11 +27,10 @@ jobs:
         env:
           SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          GPG_KEYNAME: ${{ secrets.GPG_KEYNAME }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "-- Setting new release version --"
           mvn -B versions:set -DnewVersion=${{ github.event.release.tag_name }} -DremoveSnapshot=true -DgenerateBackupPoms=false
           echo "-- Build, test and deploy release to Sonatype --"
-          mvn -B --settings maven-settings.xml clean deploy -Prelease
+          mvn -B clean deploy -Prelease
