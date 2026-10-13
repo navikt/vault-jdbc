@@ -20,7 +20,7 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: maven
-          server-id: central
+          server-id: central-portal
           server-username-env-var: SONATYPE_USER # env variable for username
           server-password-env-var: SONATYPE_PASSWORD # env variable for token
           gpg-private-key: ${{ secrets.GPG_KEYS }}
