@@ -43,4 +43,4 @@ jobs:
           echo "-- Setting new release version --"
           mvn -B versions:set "-DnewVersion=$RELEASE_VERSION" -DgenerateBackupPoms=false
           echo "-- Build, test and deploy release to Sonatype --"
-          mvn -B clean deploy -Prelease
+          mvn -B clean deploy -Prelease -Daether.priority.VersionsMetadataGeneratorFactory=NaN -Daether.priority.EnhancedLocalRepositoryManagerFactory=NaN -Daether.syncContext.named.factory=rwlock-local
